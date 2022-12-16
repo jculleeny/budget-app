@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 html,
 body {
   padding: 0;
@@ -15,12 +19,111 @@ a {
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
+.app {
+  /* border: 1px solid green; */
+  margin: 0 20px;
+}
+
+.inputForm {
+  padding: 20px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 7px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.inputForm label,
+input {
+  display: block;
+}
+
+.inputForm input {
+  width: 100%;
+  border: none;
+  height: 3vh;
+}
+
+.inputForm input:focus {
+  outline: none;
+}
+
+.inputWrapper {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 7px;
+  margin: 5px 0;
+  padding: 3px 10px;
+  background-color: rgb(255, 255, 255);
+}
+
+.inputWrapper:focus-within {
+  border: 1px solid rgb(255, 255, 255);
+}
+
+.data {
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 7px;
+  background-color: rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.dataCard {
+  margin: 15px;
+  padding: 0 5px;
+  border-radius: 7px;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.dataCardNumberPositive {
+  color: rgb(45, 154, 76);
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.dataCardNumberNegative {
+  color: rgb(211, 49, 49);
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.purchaseHistory {
+  margin: 10px 0;
+  height: 20vh;
+}
+
+.purchaseHistory table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.purchaseHistory tr {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+/* .dailyBudget {
+  outline: 1px solid red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+/* .daysRemaining {
+  outline: 1px solid greenyellow;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+/* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
+
   body {
     color: white;
     background: black;
   }
-}
+} */
