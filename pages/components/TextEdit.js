@@ -3,22 +3,25 @@ import { useState } from "react"
 export default function TextEdit ({ name }) {
 
   const [isEditing, setIsEditing] = useState(false)
+  const [budgetName, setBudgetName] = useState(name)
 
-  const handleInputChange = (e) => {
-
+  const changeName = (e) => {
+    e.preventDefault()
+    // let newName = e.target.editable.value
+    setBudgetName(e.target.editable.value)
+    setIsEditing(false)
   }
 
   return (
     <div>
       {
         isEditing ?
-        <form onSubmit={ e => e.preventDefault() }>
-        <input name="editable" onChange={ handleInputChange } defaultValue={ name } />
-        </form>
+          <form onSubmit={ changeName }>
+            <input className="h2-input" name="editable" type="text" defaultValue={ budgetName } />
+          </form>
         :
-        <h2 onClick={ () => setIsEditing(true) }>{ name }</h2>
+          <h2 onClick={ () => setIsEditing(true) }>{ budgetName }</h2>
       }
-
     </div>
   )
 }

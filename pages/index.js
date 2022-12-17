@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { animated } from '@react-spring/web'
 
 import TextEdit from './components/TextEdit'
 import History from './components/History'
@@ -7,7 +8,7 @@ export default function Home() {
 
   // Date Variables
   const date = new Date()
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September','October', 'November', 'December']
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
   let day = date.getDate()
   let month = date.getMonth()
   let year = date.getFullYear()
@@ -16,12 +17,11 @@ export default function Home() {
   // Data Variables
   const [purchaseHistory, setPurchaseHistory] = useState([])
   const [totalRemaining, setTotalRemaining] = useState(0)
+  const [remainingBudget, setRemainingBudget] = useState(0)
 
   let daysRemaining = 6 + ( getDaysInMonth(date.getFullYear(), date.getMonth()) - date.getDate() )
   let dailyBudget = Math.round((totalRemaining / daysRemaining) * 100 ) / 100
   
-  const [remainingBudget, setRemainingBudget] = useState(dailyBudget)
-
   function getDaysInMonth(year, month) {
     return new Date(year, month, 0).getDate()
   }
@@ -29,7 +29,7 @@ export default function Home() {
   const displayHistory = purchaseHistory.map(item => {
     return (
       <History
-        key={ item.date }
+        key={ Math.random() } // Temp fix
         date={ item.date }
         amount={ item.amount }
       />
@@ -39,17 +39,18 @@ export default function Home() {
   const handleTotalSubmit = (e) => {
     e.preventDefault()
     setTotalRemaining(e.target.total.value)
+    setRemainingBudget(Math.round((e.target.total.value / daysRemaining) * 100 ) / 100)
     e.target.reset()
   }
 
   const handlePurchaseSubmit = (e) => {
     e.preventDefault()
-    setRemainingBudget( Math.round((dailyBudget - e.target.purchase.value) * 100) / 100 )
-    setPurchaseHistory(purchaseHistory => [...purchaseHistory, {
+    let purchaseAmount = parseFloat(e.target.purchase.value)
+    setRemainingBudget( Math.round((remainingBudget - e.target.purchase.value) * 100) / 100 )
+    setPurchaseHistory( purchaseHistory => [...purchaseHistory, {
       date: fullCalendarDate,
-      amount: parseFloat(e.target.purchase.value)
+      amount: purchaseAmount
     }])
-    console.log(purchaseHistory)
     e.target.reset()
   }
 
