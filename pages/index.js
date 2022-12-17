@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react'
-import { animated } from '@react-spring/web'
+import { useState } from 'react'
 
 import TextEdit from './components/TextEdit'
 import History from './components/History'
+import InputPurchase from './components/InputPurchase'
+import InputBudget from './components/InputBudget'
+import Stats from './components/Stats'
 
 export default function Home() {
 
@@ -36,86 +38,36 @@ export default function Home() {
     )
   })
 
-  const handleTotalSubmit = (e) => {
-    e.preventDefault()
-    setTotalRemaining(e.target.total.value)
-    setRemainingBudget(Math.round((e.target.total.value / daysRemaining) * 100 ) / 100)
-    e.target.reset()
-  }
-
-  const handlePurchaseSubmit = (e) => {
-    e.preventDefault()
-    let purchaseAmount = parseFloat(e.target.purchase.value)
-    setRemainingBudget( Math.round((remainingBudget - e.target.purchase.value) * 100) / 100 )
-    setPurchaseHistory( purchaseHistory => [...purchaseHistory, {
-      date: fullCalendarDate,
-      amount: purchaseAmount
-    }])
-    e.target.reset()
-  }
-
   return (
     <div className='app'>
 
-      <TextEdit name='Budget Name' />
+      <TextEdit name='+ Add Budget Name' />
 
       <h3>{ fullCalendarDate }</h3>
+      <h4>Start Date - End Date</h4>
 
-      {
-        totalRemaining === 0 ?
-        <div className='inputForm'>
-        <form onSubmit={ handleTotalSubmit }>
-          <label htmlFor="total">Enter an amount to budget</label>
-          <div className='inputWrapper'>
-            <input type="text" name="total" />
-          </div>
-        </form>
-      </div>
-      :
-      <span></span>
-      }
+      <InputBudget
+        totalRemaining={ totalRemaining }
+        setTotalRemaining={ setTotalRemaining }
+        remainingBudget={ remainingBudget }
+        setRemainingBudget={ setRemainingBudget }
+        daysRemaining={ daysRemaining }
+      />
 
+      <InputPurchase
+        remainingBudget={ remainingBudget }
+        setRemainingBudget={ setRemainingBudget }
+        purchaseHistory={ purchaseHistory }
+        setPurchaseHistory={ setPurchaseHistory }
+        fullCalendarDate={ fullCalendarDate }
+      />
 
-      <div className='inputForm'>
-        <form onSubmit={ handlePurchaseSubmit }>
-          <label htmlFor="purchase">Enter Purchase Amount</label>
-          <div className='inputWrapper'>
-            <input type="text" name="purchase" />
-          </div>
-          {/* <input type="submit" /> */}
-        </form>
-      </div>
-      
-
-      <div className='data'>
-        <div className='dailyBudget dataCard'>
-          <h4>Daily Budget</h4>
-          <p><span className='dataCardNumberPositive'>${ dailyBudget }</span></p>
-        </div>
-
-        <div className='dailyBudgetRemaining dataCard'>
-          <h4>Daily Budget Remaining</h4>
-          <p>
-            {
-              remainingBudget < 0 ? 
-              <span className='dataCardNumberNegative'>${ remainingBudget }</span>
-              :
-              <span className='dataCardNumberPositive'>${ remainingBudget }</span>
-            }
-          </p>
-        </div>
-
-        <div className='totalRemaining dataCard'>
-          <h4>Total Remaining</h4>
-          <p><span className='dataCardNumberPositive'>${ totalRemaining }</span></p>
-        </div>
-
-        <div className='daysRemaining dataCard'>
-          <h4>Days Remaining</h4>
-          <p><span className='dataCardNumberPositive'>{ daysRemaining }</span></p>
-        </div>
-      </div>
-
+      <Stats
+        remainingBudget={ remainingBudget }
+        setRemainingBudget={ setRemainingBudget }
+        daysRemaining={ daysRemaining }
+        dailyBudget={ dailyBudget }
+      />
 
       <div className='purchaseHistory'>
       <table>

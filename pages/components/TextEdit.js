@@ -17,7 +17,14 @@ export default function TextEdit ({ name }) {
       {
         isEditing ?
           <form onSubmit={ changeName }>
-            <input className="h2-input" name="editable" type="text" defaultValue={ budgetName } />
+            <input
+              className="h2-input"
+              name="editable"
+              type="text"
+              defaultValue={ budgetName }
+              onFocus={ e => e.target.select() }
+              autoFocus
+            />
           </form>
         :
           <h2 onClick={ () => setIsEditing(true) }>{ budgetName }</h2>
