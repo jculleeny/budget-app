@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 
 import TextEdit from './components/TextEdit'
 import History from './components/History'
@@ -20,10 +21,11 @@ export default function Home() {
   const [purchaseHistory, setPurchaseHistory] = useState([])
   const [totalRemaining, setTotalRemaining] = useState(0)
   const [remainingBudget, setRemainingBudget] = useState(0)
+  const [budgetTotalDisplay, setBudgetTotalDisplay] = useState(true)
 
   let daysRemaining = 6 + ( getDaysInMonth(date.getFullYear(), date.getMonth()) - date.getDate() )
-  let dailyBudget = Math.round((totalRemaining / daysRemaining) * 100 ) / 100
-  
+  let dailyBudget = parseFloat(Math.round((totalRemaining / daysRemaining) * 100 ) / 100).toFixed(2)
+
   function getDaysInMonth(year, month) {
     return new Date(year, month, 0).getDate()
   }
@@ -44,21 +46,37 @@ export default function Home() {
       <TextEdit name='+ Add Budget Name' />
 
       <h3>{ fullCalendarDate }</h3>
-      <h4>Start Date - End Date</h4>
+      <h4>December 6, 2022 - January 6, 2023</h4>
 
-      <InputBudget
+      {/* <InputBudget
         totalRemaining={ totalRemaining }
         setTotalRemaining={ setTotalRemaining }
         remainingBudget={ remainingBudget }
         setRemainingBudget={ setRemainingBudget }
         daysRemaining={ daysRemaining }
-      />
+      /> */}
+
+      {
+        totalRemaining === 0
+        ?
+          <InputBudget
+            totalRemaining={ totalRemaining }
+            setTotalRemaining={ setTotalRemaining }
+            remainingBudget={ remainingBudget }
+            setRemainingBudget={ setRemainingBudget }
+            daysRemaining={ daysRemaining }
+          />
+        :
+          <></>
+      }
 
       <InputPurchase
         remainingBudget={ remainingBudget }
         setRemainingBudget={ setRemainingBudget }
         purchaseHistory={ purchaseHistory }
         setPurchaseHistory={ setPurchaseHistory }
+        totalRemaining={ totalRemaining }
+        setTotalRemaining={ setTotalRemaining }
         fullCalendarDate={ fullCalendarDate }
       />
 
@@ -67,6 +85,7 @@ export default function Home() {
         setRemainingBudget={ setRemainingBudget }
         daysRemaining={ daysRemaining }
         dailyBudget={ dailyBudget }
+        totalRemaining={ totalRemaining }
       />
 
       <div className='purchaseHistory'>
@@ -79,3 +98,21 @@ export default function Home() {
     </div>
   )
 }
+
+// return (
+//   <>
+//     { transitions( (props) => {
+//       return (
+//         <animated.div id="inputBudget" className='inputForm' style={ props }>
+//           <form onSubmit={ handleTotalSubmit }>
+//             <label htmlFor="total">Enter an amount to budget</label>
+//             <div className='inputWrapper'>
+//               <input type="text" name="total" />
+//             </div>
+//           </form>
+//         </animated.div>
+//       )
+//     })
+//   }
+//   </>
+// )

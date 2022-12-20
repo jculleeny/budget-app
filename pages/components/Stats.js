@@ -18,7 +18,7 @@ const Stats = (
     <div className='dailyBudgetRemaining dataCard'>
       <h4>Daily Budget Remaining</h4>
       <p>
-        {
+        { // Ternary for green or red text based on positive or negative number
           remainingBudget < 0 ? 
           <span className='dataCardNumberNegative'>${ remainingBudget }</span>
           :

@@ -15,22 +15,16 @@ export default function InputBudget (
     e.target.reset()
   }
 
-  return (
-    <>
-      {
-        totalRemaining === 0
-        ?
-        <div className='inputForm'>
-          <form onSubmit={ handleTotalSubmit }>
-            <label htmlFor="total">Enter an amount to budget</label>
-            <div className='inputWrapper'>
-              <input type="text" name="total" />
-            </div>
-          </form>
-        </div>
-      :
-        <></>
-      }
-    </>
+  return(
+    <div id="inputBudget" className='inputForm'>
+      <form onSubmit={ handleTotalSubmit }>
+        <label htmlFor="total">
+          Enter an amount to budget
+          <div className='inputWrapper'>
+            <input type="text" name="total" />
+          </div>
+        </label>
+      </form>
+    </div>
   )
 }
