@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion'
+
 export default function InputPurchase (
     { remainingBudget,
       setRemainingBudget,
@@ -22,7 +24,16 @@ export default function InputPurchase (
   }
 
   return (
-    <div className='inputForm'>
+    <motion.div
+      layout
+      id="inputForm"
+      className='inputForm'
+      key={ Math.random() }
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6, delay: 0.5 }}
+    >
       <form onSubmit={ handlePurchaseSubmit }>
         <label htmlFor="purchase">
           Enter Purchase Amount
@@ -32,6 +43,6 @@ export default function InputPurchase (
         </label>
         {/* <input type="submit" /> */}
       </form>
-    </div>
+    </motion.div>
   )
 }

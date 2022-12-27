@@ -1,17 +1,40 @@
 import { useState } from 'react'
-import { AnimatePresence } from 'framer-motion'
 
+// API
+import supabase from '../utils/supabase'
+
+// COMPONENTS
 import TextEdit from './components/TextEdit'
-import History from './components/History'
 import InputPurchase from './components/InputPurchase'
 import InputBudget from './components/InputBudget'
 import Stats from './components/Stats'
+import History from './components/History'
+import Dates from './components/Dates'
 
-export default function Home() {
+export async function getStaticProps() {
 
+  let { data: budgets, error } = await supabase
+  .from('budgets')
+  // returning all budgets because we only have a single testing budget for now, and can only use the one at the moment
+  .select('*')
+
+  return {
+    props: {
+      budgets
+    }
+  }
+}
+
+export default function Home( { budgets } ) {
+  
   // Date Variables
   const date = new Date()
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const months = [
+                  'January', 'February', 'March',
+                  'April', 'May', 'June',
+                  'July', 'August', 'September',
+                  'October', 'November', 'December'
+                ]
   let day = date.getDate()
   let month = date.getMonth()
   let year = date.getFullYear()
@@ -19,9 +42,11 @@ export default function Home() {
 
   // Data Variables
   const [purchaseHistory, setPurchaseHistory] = useState([])
-  const [totalRemaining, setTotalRemaining] = useState(0)
+  const [totalRemaining, setTotalRemaining] = useState(budgets[0].budget_total)
   const [remainingBudget, setRemainingBudget] = useState(0)
-  const [budgetTotalDisplay, setBudgetTotalDisplay] = useState(true)
+  const [showInputBudget, setShowInputBudget] = useState(true)
+  const [showInputPurchase, setShowInputPurchase] = useState(true)
+  const [showStats, setShowStats] = useState(true)
 
   let daysRemaining = 6 + ( getDaysInMonth(date.getFullYear(), date.getMonth()) - date.getDate() )
   let dailyBudget = parseFloat(Math.round((totalRemaining / daysRemaining) * 100 ) / 100).toFixed(2)
@@ -42,51 +67,52 @@ export default function Home() {
 
   return (
     <div className='app'>
-
-      <TextEdit name='+ Add Budget Name' />
+      <TextEdit name={ budgets[0].budget_name || '+ Add Budget Name' } />
 
       <h3>{ fullCalendarDate }</h3>
-      <h4>December 6, 2022 - January 6, 2023</h4>
-
-      {/* <InputBudget
-        totalRemaining={ totalRemaining }
-        setTotalRemaining={ setTotalRemaining }
-        remainingBudget={ remainingBudget }
-        setRemainingBudget={ setRemainingBudget }
-        daysRemaining={ daysRemaining }
-      /> */}
+      <h4>{ budgets[0].start_date } - { budgets[0].end_date }</h4>
 
       {
-        totalRemaining === 0
-        ?
+        showInputBudget && (
           <InputBudget
             totalRemaining={ totalRemaining }
             setTotalRemaining={ setTotalRemaining }
             remainingBudget={ remainingBudget }
             setRemainingBudget={ setRemainingBudget }
+            showInputBudget={ showInputBudget }
+            setShowInputBudget={ setShowInputBudget }
+            setShowInputPurchase={ setShowInputPurchase }
+            setShowStats={ setShowStats }
             daysRemaining={ daysRemaining }
           />
-        :
-          <></>
+        )
       }
 
-      <InputPurchase
-        remainingBudget={ remainingBudget }
-        setRemainingBudget={ setRemainingBudget }
-        purchaseHistory={ purchaseHistory }
-        setPurchaseHistory={ setPurchaseHistory }
-        totalRemaining={ totalRemaining }
-        setTotalRemaining={ setTotalRemaining }
-        fullCalendarDate={ fullCalendarDate }
-      />
+      {
+        showInputPurchase && (
+          <InputPurchase
+            remainingBudget={ remainingBudget }
+            setRemainingBudget={ setRemainingBudget }
+            purchaseHistory={ purchaseHistory }
+            setPurchaseHistory={ setPurchaseHistory }
+            totalRemaining={ totalRemaining }
+            setTotalRemaining={ setTotalRemaining }
+            fullCalendarDate={ fullCalendarDate }
+          />
+        )
+      }
 
-      <Stats
-        remainingBudget={ remainingBudget }
-        setRemainingBudget={ setRemainingBudget }
-        daysRemaining={ daysRemaining }
-        dailyBudget={ dailyBudget }
-        totalRemaining={ totalRemaining }
-      />
+      {
+        showStats && (
+          <Stats
+            remainingBudget={ remainingBudget }
+            setRemainingBudget={ setRemainingBudget }
+            daysRemaining={ daysRemaining }
+            dailyBudget={ dailyBudget }
+            totalRemaining={ totalRemaining }
+          />
+        )
+      }
 
       <div className='purchaseHistory'>
       <table>
@@ -95,24 +121,9 @@ export default function Home() {
         </tbody>
       </table>
       </div>
+
+      {/* <Dates /> */}
+
     </div>
   )
 }
-
-// return (
-//   <>
-//     { transitions( (props) => {
-//       return (
-//         <animated.div id="inputBudget" className='inputForm' style={ props }>
-//           <form onSubmit={ handleTotalSubmit }>
-//             <label htmlFor="total">Enter an amount to budget</label>
-//             <div className='inputWrapper'>
-//               <input type="text" name="total" />
-//             </div>
-//           </form>
-//         </animated.div>
-//       )
-//     })
-//   }
-//   </>
-// )
