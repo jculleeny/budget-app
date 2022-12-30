@@ -1,6 +1,4 @@
 import { useState } from 'react'
-
-// API
 import supabase from '../utils/supabase'
 
 // COMPONENTS
@@ -11,21 +9,29 @@ import Stats from './components/Stats'
 import History from './components/History'
 import Dates from './components/Dates'
 
+// API - SUPABASE
 export async function getStaticProps() {
 
-  let { data: budgets, error } = await supabase
+  let { data: budgets } = await supabase
   .from('budgets')
-  // returning all budgets because we only have a single testing budget for now, and can only use the one at the moment
+  // returning all budgets because we only have a single testing budget for now, and can only use the one at the moment.
   .select('*')
+
+  let { data: purchases } = await supabase
+  .from('purchases')
+  .select('*')
+
+  console.log(purchases)
 
   return {
     props: {
-      budgets
+      budgets,
+      purchases
     }
   }
 }
 
-export default function Home( { budgets } ) {
+export default function Home( { budgets, purchases } ) {
   
   // Date Variables
   const date = new Date()
@@ -41,26 +47,27 @@ export default function Home( { budgets } ) {
   let fullCalendarDate = `${months[month]} ${day}, ${year}`
 
   // Data Variables
-  const [purchaseHistory, setPurchaseHistory] = useState([])
+  // const [purchaseHistory, setPurchaseHistory] = useState([])
   const [totalRemaining, setTotalRemaining] = useState(budgets[0].budget_total)
-  const [remainingBudget, setRemainingBudget] = useState(0)
-  const [showInputBudget, setShowInputBudget] = useState(true)
-  const [showInputPurchase, setShowInputPurchase] = useState(true)
-  const [showStats, setShowStats] = useState(true)
 
   let daysRemaining = 6 + ( getDaysInMonth(date.getFullYear(), date.getMonth()) - date.getDate() )
   let dailyBudget = parseFloat(Math.round((totalRemaining / daysRemaining) * 100 ) / 100).toFixed(2)
+
+  const [remainingBudget, setRemainingBudget] = useState(dailyBudget)
+  const [showInputBudget, setShowInputBudget] = useState(true)
+  const [showInputPurchase, setShowInputPurchase] = useState(true)
+  const [showStats, setShowStats] = useState(true)
 
   function getDaysInMonth(year, month) {
     return new Date(year, month, 0).getDate()
   }
 
-  const displayHistory = purchaseHistory.map(item => {
+  const displayHistory = purchases.map(item => {
     return (
       <History
-        key={ Math.random() } // Temp fix
-        date={ item.date }
-        amount={ item.amount }
+        key={ item.id } // Temp fix
+        date={ item.purchase_date }
+        amount={ item.purchase_amount }
       />
     )
   })
@@ -93,8 +100,8 @@ export default function Home( { budgets } ) {
           <InputPurchase
             remainingBudget={ remainingBudget }
             setRemainingBudget={ setRemainingBudget }
-            purchaseHistory={ purchaseHistory }
-            setPurchaseHistory={ setPurchaseHistory }
+            // purchaseHistory={ purchaseHistory }
+            // setPurchaseHistory={ setPurchaseHistory }
             totalRemaining={ totalRemaining }
             setTotalRemaining={ setTotalRemaining }
             fullCalendarDate={ fullCalendarDate }

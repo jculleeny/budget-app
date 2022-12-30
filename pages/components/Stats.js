@@ -11,7 +11,8 @@ const Stats = (
   }
 ) => {
   return (
-    <motion.div
+    <div id="inputBudget" className='data'>
+    {/* <motion.div
       layout
       id="inputBudget"
       className='data'
@@ -20,7 +21,7 @@ const Stats = (
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.6, delay: 0.5 }}
-    >
+    > */}
       <div className='dailyBudget dataCard'>
         <h4>Daily Budget</h4>
         <p><span className='dataCardNumberPositive'>${ dailyBudget }</span></p>
@@ -47,7 +48,8 @@ const Stats = (
         <h4>Days Remaining</h4>
         <p><span className='dataCardNumberPositive'>{ daysRemaining }</span></p>
       </div>
-    </motion.div>
+    {/* </motion.div> */}
+    </div>
   )
 }
 

@@ -8,13 +8,14 @@ import removeSVG from "../../public/remove.svg"
 export default function History({ date, amount }) {
 
   return (
-    <motion.tr
-      layout
-      key={ amount }
-      initial={{ opacity: 0, y: -15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
+    // <motion.tr
+    //   layout
+    //   key={ amount }
+    //   initial={{ opacity: 0, y: -15 }}
+    //   animate={{ opacity: 1, y: 0 }}
+    //   transition={{ duration: 0.5 }}
+    // >
+    <tr>
       <td>{ date }</td>
       <td>${ amount }</td>
       <td>
@@ -22,6 +23,7 @@ export default function History({ date, amount }) {
           <Image src={ removeSVG } alt="remove purchase" width={ 25 } height={ 25 } />
         </Link>
       </td>
-    </motion.tr>
+    </tr>
+    // </motion.tr>
   )
 }
